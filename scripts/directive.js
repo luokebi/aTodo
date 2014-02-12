@@ -7,7 +7,21 @@ myTodo.directive('canedit', function() {
             element.on('dblclick', function() {
                 scope.showMe = !scope.showMe;
                 scope.$digest();
+                element.find('input')[0].focus();
             });
+
+           angular.element(element.find('input')[0])
+               .on('blur', function() {
+               scope.showMe = false;
+               scope.$digest();
+           })
+               .on('keydown', function(e) {
+                   console.log(e.keyCode);
+                   if (e.keyCode == 13) {
+                       scope.showMe = false;
+                       scope.$digest();
+                   }
+               });
        },
        template: '<span ng-transclude></span><input class="edit-input" ng-show="showMe" type="text" ng-model="t.content">'
    };
