@@ -1,7 +1,7 @@
 <div ng-repeat="t in todos | active">
     <div class="todo-item" ng-class="{done: t.complete == true}">
-        <a class="todo-status" ng-click="toggleComplete(t.content)"></a>
-        <div class="todo-item-content">{{t.content}}</div>
-        <a class="todo-delete" ng-click="del(t.content)"></a>
+        <a class="todo-status btn" ng-click="toggleComplete(t.content)"></a>
+        <div class="todo-item-content" title="{{t.content}}">{{t.content}}</div>
+        <a class="todo-delete btn" ng-click="del(t.content)"></a>
     </div>
 </div>

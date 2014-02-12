@@ -10,7 +10,7 @@
     <div id="page">
         <div id="title">To do</div>
         <div id="switcher" ng-controller="switcher">
-            <a class="switcher-btn" ng-class="{current: panelName == 'all'}" ng-click="switchPanel('all')">All</a>
+            <a class="switcher-btn" ng-class="{current: panelName == 'all'}" ng-click="switchPanel('all')">All<span class="notify-num" ng-show="activeNumber > 0">{{activeNumber}}</span></a>
             <a class="switcher-btn" ng-class="{current: panelName == 'active'}" ng-click="switchPanel('active')">Active</a>
             <a class="switcher-btn" ng-class="{current: panelName == 'complete'}" ng-click="switchPanel('complete')">Complete</a>
         </div>
@@ -19,8 +19,8 @@
         </div>
 
         <div id="add" ng-controller="add">
-            <input id="add-input" type="text" ng-model="content" placeholder="Add a todo">
-            <a id="add-btn" ng-click="add()"></a>
+            <input id="add-input" type="text" ng-model="content" ng-keydown="keyDownHandler($event)" placeholder="Add a todo">
+            <a id="add-btn" class="btn" ng-click="add()"></a>
         </div>
     </div>
 
@@ -31,5 +31,6 @@
 <script type="text/javascript" src="scripts/service.js"></script>
 <script type="text/javascript" src="scripts/controller.js"></script>
 <script type="text/javascript" src="scripts/filter.js"></script>
+<script type="text/javascript" src="scripts/directive.js"></script>
 </body>
 </html>

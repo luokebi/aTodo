@@ -3,19 +3,19 @@ var myTodo = angular.module('myTodo', ['ngRoute']);
 myTodo.config(function($routeProvider){
     $routeProvider
         .when('/all', {
-            controller: "allCtrl",
+            controller: "listCtrl",
             templateUrl: 'views/all.html'
         })
         .when('/active', {
-           controller: "activeCtrl",
+           controller: "listCtrl",
            templateUrl: 'views/active.html'
         })
         .when('/complete', {
-            controller: "completeCtrl",
+            controller: "listCtrl",
             templateUrl: 'views/complete.html'
         })
         .when('/', {
-            redirectTo: "/active"
+            redirectTo: "/all"
         });
 
 })

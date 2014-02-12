@@ -1,5 +1,5 @@
-myTodo.service("todo", ['$rootScope', function ($rootScope) {
-    var service = {
+myTodo.factory("todo", ['$rootScope', function ($rootScope) {
+    var factory = {
         todos: [
             {content: "sdfs", complete: false},
             {content: "Test", complete: false},
@@ -28,5 +28,5 @@ myTodo.service("todo", ['$rootScope', function ($rootScope) {
         }
     };
 
-    return service;
+    return factory;
 }]);

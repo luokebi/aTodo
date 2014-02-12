@@ -1,72 +1,60 @@
-function switcher ($scope, $location, $rootScope) {
-    $scope.panelName = 'active';
+function switcher ($scope, $location, $rootScope, todo) {
+    $scope.panelName = 'all';
+    $scope.todos = todo.todos;
     $scope.switchPanel = function(p) {
         $location.path(p);
         $scope.panelName = p;
+    };
+
+    refreshNumber();
+
+    function refreshNumber () {
+        $scope.activeNumber = $scope.todos.filter(function (t) {
+            return t.complete == false;
+        }).length;
     }
 
     $rootScope.$on('add', function() {
-        $location.path('active');
-        $scope.panelName = 'active';
+        $location.path('all');
+        $scope.panelName = 'all';
     });
+
+    $scope.$watch('todos', function() {
+        refreshNumber();
+    }, true);
 }
 
 function add ($scope, todo, $rootScope) {
     $scope.content = '';
 
     $scope.add = function () {
+        if ($scope.content == '') {
+            return;
+        }
         todo.addTodo({content: $scope.content, complete: false});
         console.log(todo.todos);
         $scope.content = '';
         $rootScope.$broadcast('add');
     };
 
+    $scope.keyDownHandler = function (e) {
+        if (e.keyCode == 13) {
+            $scope.add();
+        }
+    };
+
+
+
 }
 
-
-
-function activeCtrl ($scope, todo) {
+myTodo.controller('listCtrl', function($scope, todo) {
     $scope.todos = todo.todos;
 
     $scope.toggleComplete = function (content) {
         todo.complete(content);
-        console.log(todo.todos);
     };
 
     $scope.del = function (content) {
-        console.log("del todo");
         todo.delTodo(content);
-        console.log(todo.todos);
     }
-}
-
-function allCtrl ($scope, todo) {
-    $scope.todos = todo.todos;
-
-    $scope.toggleComplete = function (content) {
-        todo.complete(content);
-        console.log(todo.todos);
-    };
-
-    $scope.del = function (content) {
-        console.log("del todo");
-        todo.delTodo(content);
-        console.log(todo.todos);
-    }
-}
-
-
-function completeCtrl ($scope, todo) {
-    $scope.todos = todo.todos;
-
-    $scope.toggleComplete = function (content) {
-        todo.complete(content);
-        console.log(todo.todos);
-    };
-
-    $scope.del = function (content) {
-        console.log("del todo");
-        todo.delTodo(content);
-        console.log(todo.todos);
-    }
-}
+});
