@@ -2,6 +2,7 @@ myTodo.directive('canedit', function() {
    return {
        restrict: 'A',
        transclude: true,
+       scope: true,
        link: function (scope, element, attrs) {
            scope.showMe = false;
             element.on('dblclick', function() {
@@ -16,7 +17,6 @@ myTodo.directive('canedit', function() {
                scope.$digest();
            })
                .on('keydown', function(e) {
-                   console.log(e.keyCode);
                    if (e.keyCode == 13) {
                        scope.showMe = false;
                        scope.$digest();

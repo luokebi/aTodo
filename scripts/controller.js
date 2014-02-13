@@ -1,27 +1,30 @@
 function switcher ($scope, $location, $rootScope, todo) {
     $scope.panelName = 'all';
-    $scope.todos = todo.todos;
-    $scope.switchPanel = function(p) {
-        $location.path(p);
-        $scope.panelName = p;
-    };
+    todo.getTodos().then(function() {
+        $scope.todos = todo.todos;
+        $scope.switchPanel = function(p) {
+            $location.path(p);
+            $scope.panelName = p;
+        };
 
-    refreshNumber();
+        refreshNumber();
 
-    function refreshNumber () {
-        $scope.activeNumber = $scope.todos.filter(function (t) {
-            return t.complete == false;
-        }).length;
-    }
+        function refreshNumber () {
+            $scope.activeNumber = $scope.todos.filter(function (t) {
+                return t.complete == false;
+            }).length;
+        }
 
-    $rootScope.$on('add', function() {
-        $location.path('all');
-        $scope.panelName = 'all';
+        $rootScope.$on('add', function() {
+            $location.path('all');
+            $scope.panelName = 'all';
+        });
+
+        $scope.$watch('todos', function() {
+            refreshNumber();
+        }, true);
     });
 
-    $scope.$watch('todos', function() {
-        refreshNumber();
-    }, true);
 }
 
 function add ($scope, todo, $rootScope) {
@@ -48,13 +51,16 @@ function add ($scope, todo, $rootScope) {
 }
 
 myTodo.controller('listCtrl', function($scope, todo) {
-    $scope.todos = todo.todos;
+    todo.getTodos().then(function(){
+        $scope.todos = todo.todos;
 
-    $scope.toggleComplete = function (content) {
-        todo.complete(content);
-    };
+        $scope.toggleComplete = function (content) {
+            todo.complete(content);
+        };
 
-    $scope.del = function (content) {
-        todo.delTodo(content);
-    }
+        $scope.del = function (content) {
+            todo.delTodo(content);
+        }
+    });
+
 });

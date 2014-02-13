@@ -1,13 +1,26 @@
-myTodo.factory("todo", ['$rootScope', function ($rootScope) {
+myTodo.factory("todo", ['$rootScope',"$q", function ($rootScope, $q) {
     var factory = {
+        getTodos: function() {
+            var that = this;
+            var deferred = $q.defer();
+            chrome.storage.local.get('todos', function(d) {
+                that.todos = d.todos;
+                deferred.resolve();
+            });
+
+            return deferred.promise;
+        },
         todos: [
-            {content: "sdfs", complete: false},
+            /*{content: "sdfs", complete: false},
             {content: "Test", complete: false},
-            {content: "complete Shopping", complete: true}
+            {content: "complete Shopping", complete: true}*/
         ],
 
         addTodo: function (todo) {
+            var that = this;
             this.todos.push( todo );
+            this.store();
+            console.log(this.todos);
         },
 
         complete: function (content) {
@@ -17,6 +30,8 @@ myTodo.factory("todo", ['$rootScope', function ($rootScope) {
                     arr[index].complete = !t.complete;
                 }
             });
+            this.store();
+            console.log(this.todos);
         },
 
         delTodo: function (content) {
@@ -25,6 +40,12 @@ myTodo.factory("todo", ['$rootScope', function ($rootScope) {
                    arr.splice(index, 1);
                }
             });
+            this.store();
+        },
+
+        store: function () {
+            var that = this;
+            chrome.storage.local.set({'todos':that.todos});
         }
     };
 
