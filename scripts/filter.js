@@ -9,11 +9,11 @@ myTodo.filter('active', function () {
 });
 
 myTodo.filter('complete', function () {
-    var activeFilter = function (arr) {
+    var completeFilter = function (arr) {
         return arr.filter(function(a) {
             return  a.complete == true;
         });
     };
 
-    return activeFilter;
+    return completeFilter;
 });

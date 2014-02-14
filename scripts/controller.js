@@ -1,43 +1,64 @@
-function switcher ($scope, $location, $rootScope, todo) {
+function switcher ($scope, $location) {
     $scope.panelName = 'all';
-    todo.getTodos().then(function() {
-        $scope.todos = todo.todos;
+    $scope.activeNumber = 0;
         $scope.switchPanel = function(p) {
             $location.path(p);
             $scope.panelName = p;
         };
 
-        refreshNumber();
 
-        function refreshNumber () {
-            $scope.activeNumber = $scope.todos.filter(function (t) {
+        function refreshNumber (todos) {
+            $scope.activeNumber = todos.filter(function (t) {
                 return t.complete == false;
             }).length;
         }
 
-        $rootScope.$on('add', function() {
+        $scope.$on('add', function() {
             $location.path('all');
             $scope.panelName = 'all';
         });
 
-        $scope.$watch('todos', function() {
-            refreshNumber();
-        }, true);
-    });
+        $scope.$on('refreshNumber', function(e, todos) {
+           refreshNumber(todos);
+        });
+
 
 }
 
-function add ($scope, todo, $rootScope) {
-    $scope.content = '';
+
+myTodo.controller('listCtrl', function($scope, todoStorage, $rootScope, todoData) {
+         $scope.content = '';
+         $scope.todos = todoData;
+
+        $scope.toggleComplete = function (content) {
+            $scope.todos.forEach(function(t, index, arr) {
+                if(t.content == content) {
+                    arr[index].complete = !t.complete;
+                }
+            });
+            todoStorage.update($scope.todos);
+        };
+
+        $scope.del = function (content) {
+            $scope.todos.forEach(function(t, index, arr) {
+                if(t.content == content) {
+                    arr.splice(index, 1);
+                }
+            });
+
+            todoStorage.update($scope.todos);
+        };
 
     $scope.add = function () {
         if ($scope.content == '') {
             return;
         }
-        todo.addTodo({content: $scope.content, complete: false});
-        console.log(todo.todos);
+
+        $scope.todos.push({content: $scope.content, complete: false});
         $scope.content = '';
         $rootScope.$broadcast('add');
+
+        todoStorage.update($scope.todos);
     };
 
     $scope.keyDownHandler = function (e) {
@@ -45,22 +66,5 @@ function add ($scope, todo, $rootScope) {
             $scope.add();
         }
     };
-
-
-
-}
-
-myTodo.controller('listCtrl', function($scope, todo) {
-    todo.getTodos().then(function(){
-        $scope.todos = todo.todos;
-
-        $scope.toggleComplete = function (content) {
-            todo.complete(content);
-        };
-
-        $scope.del = function (content) {
-            todo.delTodo(content);
-        }
-    });
 
 });

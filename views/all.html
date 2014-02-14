@@ -5,3 +5,7 @@
         <a class="todo-delete btn" ng-click="del(t.content)"></a>
     </div>
 </div>
+<div id="add">
+    <input id="add-input" type="text" ng-model="content" ng-keydown="keyDownHandler($event)" placeholder="Add a todo">
+    <a id="add-btn" class="btn" ng-click="add()"></a>
+</div>

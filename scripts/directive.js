@@ -26,3 +26,18 @@ myTodo.directive('canedit', function() {
        template: '<span ng-transclude></span><input class="edit-input" ng-show="showMe" type="text" ng-model="t.content">'
    };
 });
+
+
+myTodo.directive('shaking', function() {
+    return {
+      restrict: 'A',
+      link: function (scope, element, attrs) {
+          scope.$watch('activeNumber', function() {
+             element.css('-webkit-animation-play-state', 'running');
+             element.on('webkitAnimationEnd', function() {
+                 element.css('-webkit-animation-play-state', 'paused');
+             });
+          });
+      }
+    };
+});

@@ -10,17 +10,12 @@
     <div id="page">
         <div id="title">To do</div>
         <div id="switcher" ng-controller="switcher">
-            <a class="switcher-btn" ng-class="{current: panelName == 'all'}" ng-click="switchPanel('all')">All<span class="notify-num" ng-show="activeNumber > 0">{{activeNumber}}</span></a>
+            <a class="switcher-btn" ng-class="{current: panelName == 'all'}" ng-click="switchPanel('all')">All<span class="notify-num shake" shaking ng-show="activeNumber > 0">{{activeNumber}}</span></a>
             <a class="switcher-btn" ng-class="{current: panelName == 'active'}" ng-click="switchPanel('active')">Active</a>
             <a class="switcher-btn" ng-class="{current: panelName == 'complete'}" ng-click="switchPanel('complete')">Complete</a>
         </div>
         <div id="container">
             <div ng-view></div>
-        </div>
-
-        <div id="add" ng-controller="add">
-            <input id="add-input" type="text" ng-model="content" ng-keydown="keyDownHandler($event)" placeholder="Add a todo">
-            <a id="add-btn" class="btn" ng-click="add()"></a>
         </div>
     </div>
 
