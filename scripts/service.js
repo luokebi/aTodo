@@ -1,18 +1,53 @@
 myTodo.factory("todoStorage", ["$q", "$rootScope", function ($q, $rootScope) {
     var factory = {
-        getTodos: function() {
-            var deferred = $q.defer();
-            chrome.storage.local.get('todos', function(d) {
-                $rootScope.$broadcast('refreshNumber', d['todos']);
-                deferred.resolve(d['todos'] ? d['todos'] : []);
-            });
+        todoData:null,
 
+        getTodos: function() {
+            var that = this;
+            var deferred = $q.defer();
+            if (this.todoData != null) {
+                deferred.resolve(this.todoData);
+            } else {
+                chrome.storage.local.get('todos', function(d) {
+                    setTimeout(function() {
+                        that.todoData = d['todos'] ? d['todos'] : [];
+                        console.log(that.todoData);
+                        deferred.resolve(that.todoData);
+                    }, 3000);
+
+                });
+            }
+            
             return deferred.promise;
         },
 
-        update: function (todos) {
-            chrome.storage.local.set({'todos':todos});
-            $rootScope.$broadcast('refreshNumber', todos);
+        add: function (todo) {
+            this.todoData.push(todo);
+            this.update();
+        },
+
+        del: function (timeStamp) {
+            this.todoData.forEach(function(t, index, arr) {
+                if(t.timeStamp  == timeStamp) {
+                    arr.splice(index, 1);
+                }
+            });
+
+            this.update();
+        },
+
+        toggleComplete: function (timeStamp) {
+            this.todoData.forEach(function(t, index, arr) {
+                if(t.timeStamp == timeStamp) {
+                    arr[index].complete = !t.complete;
+                }
+            });
+            this.update();
+        },
+
+        update: function () {
+            chrome.storage.local.set({'todos':this.todoData});
+            $rootScope.$broadcast('refreshNumber', this.todoData);
         }
     };
 

@@ -25,40 +25,17 @@ function switcher ($scope, $location) {
 
 }
 
-
-myTodo.controller('listCtrl', function($scope, todoStorage, $rootScope, todoData) {
-         $scope.content = '';
-         $scope.todos = todoData;
-
-        $scope.toggleComplete = function (content) {
-            $scope.todos.forEach(function(t, index, arr) {
-                if(t.content == content) {
-                    arr[index].complete = !t.complete;
-                }
-            });
-            todoStorage.update($scope.todos);
-        };
-
-        $scope.del = function (content) {
-            $scope.todos.forEach(function(t, index, arr) {
-                if(t.content == content) {
-                    arr.splice(index, 1);
-                }
-            });
-
-            todoStorage.update($scope.todos);
-        };
+myTodo.controller('add', function($scope, todoStorage, $rootScope) {
+    $scope.content = '';
 
     $scope.add = function () {
-        if ($scope.content == '') {
+        if ($scope.content === '') {
             return;
         }
 
-        $scope.todos.push({content: $scope.content, complete: false});
+        todoStorage.add({timeStamp: new Date().getTime(), content: $scope.content, complete: false});
         $scope.content = '';
         $rootScope.$broadcast('add');
-
-        todoStorage.update($scope.todos);
     };
 
     $scope.keyDownHandler = function (e) {
@@ -66,5 +43,25 @@ myTodo.controller('listCtrl', function($scope, todoStorage, $rootScope, todoData
             $scope.add();
         }
     };
+});
+
+
+myTodo.controller('listCtrl', function($scope, todoStorage, $rootScope) {
+         $scope.content = '';
+         todoStorage.getTodos().then(function(data){
+            console.log("data", data);
+            $scope.todos = data;
+            $rootScope.$broadcast('refreshNumber', data);
+         });
+         
+        $scope.toggleComplete = function (timeStamp) {
+           todoStorage.toggleComplete(timeStamp);
+        };
+
+        $scope.del = function (timeStamp) {
+            todoStorage.del(timeStamp);
+        };
+
+    
 
 });

@@ -1,5 +1,6 @@
 myTodo.filter('active', function () {
    var activeFilter = function (arr) {
+    console.log(arr);
        return arr.filter(function(a) {
           return  a.complete == false;
        });
